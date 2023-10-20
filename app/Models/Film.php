@@ -9,7 +9,7 @@ class Film extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'image', 'title'
+        'image', 'title', 'video', 'over_view', 'views', 'category_id'
     ];
 
     public function categories()

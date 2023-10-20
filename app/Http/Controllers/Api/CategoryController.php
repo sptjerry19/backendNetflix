@@ -14,7 +14,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $data = Category::get();
+        $data = Category::query()->get();
+        // ->join('films', 'categories.id', '=', 'films.category_id')
+        //     ->select('categories.*', 'films.image', 'films.title', 'films.id')
         return Response()->json([
             'status' => "200",
             'message' => "successfull",

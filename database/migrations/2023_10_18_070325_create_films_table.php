@@ -19,7 +19,9 @@ return new class extends Migration
             $table->string('title');
             $table->string('over_view')->nullable();
             $table->integer('views')->default(10);
-            $table->foreignIdFor(Category::class);
+            $table->foreignId('category_id')->constrained()
+                ->onUpdate('cascade')
+                ->onDelete('cascade');
             $table->timestamps();
         });
     }

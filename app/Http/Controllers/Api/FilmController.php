@@ -12,9 +12,15 @@ class FilmController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Film::get();
+        $data = Film::query()->join('categories', 'films.category_id', '=', 'categories.id')
+            ->select('films.*', 'categories.name')->simplePaginate(15);
+        return Response()->json([
+            'status' => "200",
+            'message' => "successfull",
+            'data' => $data,
+        ]);
     }
 
     /**
@@ -23,16 +29,22 @@ class FilmController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:4000',
+            'title' => 'required|string|unique:films,title|max:40',
+            'over_view' => 'string|max:400',
         ]);
         $image_path = $request->file('image')->store('image', 'public');
 
         $data = Film::create([
             'image' => $image_path,
+            'video' => $request->video,
             'title' => $request->title,
+            'over_view' => $request->over_view,
+            'views' => $request->views,
+            'category_id' => $request->category_id,
         ]);
 
-        return response($data, Response::HTTP_CREATED);
+        return Response($data, Response::HTTP_CREATED);
     }
 
     /**
@@ -40,7 +52,13 @@ class FilmController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $film = Film::query()->join('categories', 'films.category_id', '=', 'categories.id')
+            ->select('films.*', 'categories.name')->findOrFail($id);
+        return response()->json([
+            'status' => '200',
+            'message' => 'successfull',
+            'data' => $film,
+        ]);
     }
 
     /**

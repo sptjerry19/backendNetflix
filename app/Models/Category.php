@@ -9,7 +9,10 @@ class Category extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'films_id'];
+    protected $casts = [
+        'films_id' => 'array'
+    ];
 
     public function films()
     {
