@@ -12,10 +12,15 @@ class FilmController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
-        $data = Film::query()->join('categories', 'films.category_id', '=', 'categories.id')
-            ->select('films.*', 'categories.name')->simplePaginate(15);
+        if (request()->category) {
+            $id = request()->category;
+            $data = Film::query()->where('category_id', '=', $id)->get();
+        } else {
+            $data = Film::query()->join('categories', 'films.category_id', '=', 'categories.id')
+                ->select('films.*', 'categories.name')->get();
+        }
         return Response()->json([
             'status' => "200",
             'message' => "successfull",
@@ -29,9 +34,9 @@ class FilmController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:4000',
+            'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
             'title' => 'required|string|unique:films,title|max:40',
-            'over_view' => 'string|max:400',
+            'over_view' => 'string|max:300',
         ]);
         $image_path = $request->file('image')->store('image', 'public');
 
@@ -74,6 +79,11 @@ class FilmController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $film = Film::findOrFail($id);
+        return response()->json([
+            'status' => '200',
+            'message' => 'destroy completed',
+            'data' => $film->delete(),
+        ]);
     }
 }
