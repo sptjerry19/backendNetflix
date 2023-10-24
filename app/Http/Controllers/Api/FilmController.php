@@ -14,7 +14,10 @@ class FilmController extends Controller
      */
     public function index()
     {
-        if (request()->category) {
+        if (request()->a) {
+            $value = request()->a;
+            $data = Film::where('title', 'LIKE', '%' . $value . '%')->get();
+        } else if (request()->category) {
             $id = request()->category;
             $data = Film::query()->where('category_id', '=', $id)->get();
         } else {
@@ -23,7 +26,7 @@ class FilmController extends Controller
         }
         return Response()->json([
             'status' => "200",
-            'message' => "successfull",
+            'message' => strlen($data) != 2 ? "successfull" : "error",
             'data' => $data,
         ]);
     }
@@ -71,7 +74,24 @@ class FilmController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $film = Film::findOrFail($id);
+        $this->validate($request, [
+            'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            'title' => 'required|string|unique:films,title|max:40',
+            'over_view' => 'string|max:300',
+        ]);
+        $image_path = $request->file('image')->store('image', 'public');
+
+        $data = $film->update([
+            'image' => $image_path,
+            'video' => $request->video,
+            'title' => $request->title,
+            'over_view' => $request->over_view,
+            'views' => $request->views,
+            'category_id' => $request->category_id,
+        ]);
+
+        return Response($data, Response::HTTP_UPGRADE_REQUIRED);
     }
 
     /**
