@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\FilmController;
+use App\Http\Controllers\api\ImdbController;
 use App\Http\Controllers\AuthController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -24,7 +25,7 @@ use Illuminate\Support\Facades\Route;
 // });
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
-Route::group(['middleware' => ['auth:sanctum']], function() {
+Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/users', [AuthController::class, 'index']);
     Route::post('/logout', [AuthController::class, 'logout']);
 
@@ -44,6 +45,6 @@ Route::group(['middleware' => ['auth:sanctum']], function() {
 Route::get('/films', [FilmController::class, 'index']);
 Route::get('/films/{id}', [FilmController::class, 'show']);
 
-
+Route::get('/imdb', [ImdbController::class, 'index']);
 
 Route::get('/categories', [CategoryController::class, 'index']);

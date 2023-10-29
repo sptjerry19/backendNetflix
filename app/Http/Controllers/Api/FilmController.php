@@ -16,13 +16,13 @@ class FilmController extends Controller
     {
         if (request()->a) {
             $value = request()->a;
-            $data = Film::where('title', 'LIKE', '%' . $value . '%')->get();
+            $data = Film::where('title', 'LIKE', '%' . $value . '%')->paginate(15);
         } else if (request()->category) {
             $id = request()->category;
-            $data = Film::query()->where('category_id', '=', $id)->get();
+            $data = Film::query()->where('category_id', '=', $id)->paginate(15);
         } else {
             $data = Film::query()->join('categories', 'films.category_id', '=', 'categories.id')
-                ->select('films.*', 'categories.name')->get();
+                ->select('films.*', 'categories.name')->paginate(15);
         }
         return Response()->json([
             'status' => "200",
@@ -77,7 +77,7 @@ class FilmController extends Controller
         $film = Film::findOrFail($id);
         $this->validate($request, [
             'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
-            'title' => 'required|string|unique:films,title|max:40',
+            'title' => 'required|string|max:40',
             'over_view' => 'string|max:300',
         ]);
         $image_path = $request->file('image')->store('image', 'public');
