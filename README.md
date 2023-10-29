@@ -2,15 +2,21 @@
 
 ## install project
 
+```sh
 composer install
+```
 
 ## migrate databases
 
+```sh
 php artisan migrate
+```
 
 ## run serve
 
+```sh
 php artisan serve
+```
 
 ## connect vs frontend
 
