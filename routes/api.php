@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Laravel\Socialite\Facades\Socialite;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,24 @@ use Illuminate\Support\Facades\Route;
 // });
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
+Route::get('/login/{provider}', function ($provider) {
+    return Socialite::driver($provider)->redirect();
+});
+
+Route::get('/redirect/{provider}', function ($provider) {
+    try {
+        $user = Socialite::driver($provider)->stateless()->user();
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+
+    // Create or update user in your database
+    // ...
+
+    // Generate and return authentication token
+    $token = $user->createToken('AuthToken')->accessToken;
+    return response()->json(['token' => $token]);
+});
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/users', [AuthController::class, 'index']);
     Route::post('/logout', [AuthController::class, 'logout']);

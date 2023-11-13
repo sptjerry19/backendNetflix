@@ -5,14 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         return response()->json(User::latest()->get());
     }
 
-    public function register(Request $request) {
+    public function register(Request $request)
+    {
         $fieds = $request->validate([
             'name' => 'required|string|',
             'email' => 'required|string|unique:users,email',
@@ -35,7 +38,8 @@ class AuthController extends Controller
         return response($response, 201);
     }
 
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
         $fieds = $request->validate([
             'email' => 'required|string',
             'password' => 'required|string',
@@ -43,7 +47,7 @@ class AuthController extends Controller
 
         $user = User::where('email', $fieds['email'])->first();
 
-        if(!$user || !Hash::check($fieds['password'], $user->password)) {
+        if (!$user || !Hash::check($fieds['password'], $user->password)) {
             return response([
                 'message' => 'Error login',
             ], 401);
@@ -55,11 +59,11 @@ class AuthController extends Controller
             'user' => $user,
             'token' => $token,
         ];
-
         return response($response, 201);
     }
 
-    public function logout(Request $request) {
+    public function logout(Request $request)
+    {
         $user = $request->user();
 
         $user->tokens()->delete();
