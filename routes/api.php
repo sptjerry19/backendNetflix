@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\FilmController;
+use App\Http\Controllers\Api\GenreController;
 use App\Http\Controllers\api\ImdbController;
 use App\Http\Controllers\AuthController;
 use App\Models\User;
@@ -64,6 +65,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 Route::get('/films', [FilmController::class, 'index']);
 Route::get('/films/{id}', [FilmController::class, 'show']);
 
-Route::get('/imdb', [ImdbController::class, 'index']);
+Route::get('/imdb', [FilmController::class, 'imdb']);
 
 Route::get('/categories', [CategoryController::class, 'index']);
+
+
+// musics
+Route::get('/genre', [GenreController::class, 'index']);
