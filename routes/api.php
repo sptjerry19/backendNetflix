@@ -4,6 +4,8 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\FilmController;
 use App\Http\Controllers\Api\GenreController;
 use App\Http\Controllers\api\ImdbController;
+use App\Http\Controllers\Api\SingerController;
+use App\Http\Controllers\Api\SongController;
 use App\Http\Controllers\AuthController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -58,6 +60,19 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/categories', [CategoryController::class, 'store']);
     Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
     Route::put('/categories/{id}', [CategoryController::class, 'update']);
+
+    // genres
+    Route::post('/genres', [GenreController::class, 'store']);
+    Route::put('/genres/{id}', [GenreController::class, 'update']);
+    Route::delete('/genres/{id}', [GenreController::class, 'destroy']);
+    // singers
+    Route::post('/singers', [SingerController::class, 'store']);
+    Route::put('/singers/{id}', [SingerController::class, 'update']);
+    Route::delete('/singers/{id}', [SingerController::class, 'destroy']);
+    // songs
+    Route::post('/songs', [SongController::class, 'store']);
+    Route::put('/songs/{id}', [SongController::class, 'update']);
+    Route::delete('/songs/{id}', [SongController::class, 'destroy']);
 });
 // Route::middleware('auth:sanctum')->get('/users', [AuthController::class, 'index']);
 
@@ -65,10 +80,16 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 Route::get('/films', [FilmController::class, 'index']);
 Route::get('/films/{id}', [FilmController::class, 'show']);
 
-Route::get('/imdb', [FilmController::class, 'imdb']);
+Route::get('/imdb', [ImdbController::class, 'index']);
 
 Route::get('/categories', [CategoryController::class, 'index']);
 
 
 // musics
-Route::get('/genre', [GenreController::class, 'index']);
+Route::get('/genres', [GenreController::class, 'index']);
+Route::get('/genres/{id}', [GenreController::class, 'show']);
+Route::get('/songs', [SongController::class, 'index']);
+Route::get('/songs/top10', [SongController::class, 'top10']);
+Route::get('/songs/{id}', [SongController::class, 'show']);
+Route::get('/singers', [SingerController::class, 'index']);
+Route::get('/singers/{id}', [SingerController::class, 'show']);

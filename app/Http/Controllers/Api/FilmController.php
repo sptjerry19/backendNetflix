@@ -84,7 +84,6 @@ class FilmController extends Controller
                 'over_view' => 'string|max:300',
             ]);
 
-            dd($request->file('image'));
             $image_path = $request->file('image')->store('image', 'public');
 
             $data = $film->update([

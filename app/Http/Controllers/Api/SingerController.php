@@ -49,7 +49,9 @@ class SingerController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $singer = Singer::findOrFail($id);
+
+        return response()->json($singer);
     }
 
     /**
@@ -57,7 +59,22 @@ class SingerController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $this->validate($request, [
+            'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            'name' => 'required|string|max:40'
+        ]);
+
+        $singer = Singer::findOrFail($id);
+        $data = $singer->update([
+            'image' => $request->image,
+            'name' => $request->name,
+        ]);
+
+        return response()->json([
+            'status' => 200,
+            'message' => "success",
+            'data' => $data
+        ]);
     }
 
     /**
@@ -65,6 +82,7 @@ class SingerController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $singer = Singer::findOrFail($id);
+        return response()->json($singer, 200);
     }
 }
