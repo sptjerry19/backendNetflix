@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreSongRequest;
 use App\Models\Genre;
 use App\Models\Song;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\DB;
 
 class SongController extends Controller
@@ -47,9 +49,20 @@ class SongController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreSongRequest $request)
     {
-        //
+        $params = $request->validated();
+        $image_path = $request->file('image')->store('image', 'public');
+        $audio_path = $request->file('audio')->store('audio', 'public');
+
+        $data = Song::create([
+            'name' => $request->name,
+            'image' => $image_path,
+            'audio' => $audio_path,
+            'singer_id' => $request->singer_id,
+        ]);
+
+        return Response($data, Response::HTTP_CREATED);
     }
 
     /**
@@ -97,6 +110,19 @@ class SongController extends Controller
             ->join('singers', 'songs.singer_id', '=', 'singers.id')
             ->select('songs.*', 'singers.name as singer_name', DB::raw('GROUP_CONCAT(genres.name) AS genre_name'))
             ->groupBy('songs.id')->limit($limit)->get();
+
+        return response()->json($data);
+    }
+
+    /**
+     * all song
+     */
+    public function all(Request $request)
+    {
+        $data = Song::query()
+            ->join('singers', 'songs.singer_id', '=', 'singers.id')
+            ->select('songs.*', 'singers.name as singer_name',)
+            ->groupBy('songs.id')->paginate(15);
 
         return response()->json($data);
     }

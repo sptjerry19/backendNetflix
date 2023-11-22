@@ -80,7 +80,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 Route::get('/films', [FilmController::class, 'index']);
 Route::get('/films/{id}', [FilmController::class, 'show']);
 
-Route::get('/imdb', [ImdbController::class, 'index']);
+Route::get('/imdb', [FilmController::class, 'imdb']);
 
 Route::get('/categories', [CategoryController::class, 'index']);
 
@@ -89,7 +89,9 @@ Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/genres', [GenreController::class, 'index']);
 Route::get('/genres/{id}', [GenreController::class, 'show']);
 Route::get('/songs', [SongController::class, 'index']);
+Route::get('/songs/all', [SongController::class, 'all']);
 Route::get('/songs/top10', [SongController::class, 'top10']);
 Route::get('/songs/{id}', [SongController::class, 'show']);
 Route::get('/singers', [SingerController::class, 'index']);
 Route::get('/singers/{id}', [SingerController::class, 'show']);
+Route::get('/singers', [SingerController::class, 'index']);
