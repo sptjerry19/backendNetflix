@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreSongRequest;
+use App\Http\Requests\UpdateSongRequest;
 use App\Models\Genre;
 use App\Models\Song;
 use Illuminate\Http\Request;
@@ -52,6 +53,7 @@ class SongController extends Controller
     public function store(StoreSongRequest $request)
     {
         $params = $request->validated();
+        $selectGenres = $request->genres;
         $image_path = $request->file('image')->store('image', 'public');
         $audio_path = $request->file('audio')->store('audio', 'public');
 
@@ -61,6 +63,8 @@ class SongController extends Controller
             'audio' => $audio_path,
             'singer_id' => $request->singer_id,
         ]);
+
+        $data->genre()->sync($selectGenres);
 
         return Response($data, Response::HTTP_CREATED);
     }
@@ -78,15 +82,44 @@ class SongController extends Controller
             ->select('songs.*', 'singers.name as singer_name', DB::raw('GROUP_CONCAT(genres.name) AS genre_name'))
             ->groupBy('songs.id')->get();
 
+        if ($song->isEmpty()) {
+            $song = Song::findOrFail($id)
+                ->join('singers', 'songs.singer_id', '=', 'singers.id')
+                ->where('songs.id', '=', $id)
+                ->select('songs.*', 'singers.name as singer_name')
+                ->groupBy('songs.id')->get();
+        };
+
         return response()->json($song);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateSongRequest $request, string $id)
     {
-        //
+        $song = Song::finOrFail($id);
+        $params = $request->validated();
+        $selectGenres = $request->genres;
+        if ($request->file('image') == $song->image) {
+            $image_path = $song->image;
+        } else if ($request->file('audio') == $song->audio) {
+            $audio_path = $song->audio;
+        } else {
+            $image_path = $request->file('image')->store('image', 'public');
+            $audio_path = $request->file('audio')->store('audio', 'public');
+        }
+
+        $data = $song->update([
+            'name' => $request->name,
+            'image' => $image_path,
+            'audio' => $audio_path,
+            'singer_id' => $request->singer_id,
+        ]);
+
+        $data->genre()->sync($selectGenres);
+
+        return Response($data, Response::HTTP_CREATED);
     }
 
     /**

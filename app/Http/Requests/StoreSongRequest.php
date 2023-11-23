@@ -25,7 +25,7 @@ class StoreSongRequest extends FormRequest
         return [
             'name' => 'required|string|unique:songs|max:100',
             'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
-            'audio' => 'required|mimes:audio/mpeg,mpga,mp3,wav|max:2048',
+            'audio' => 'required|mimes:audio/mpeg,mpga,mp3,wav',
             'singer_id' => 'required',
         ];
     }
