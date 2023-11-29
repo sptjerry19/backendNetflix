@@ -32,8 +32,10 @@ class SingerController extends Controller
             'name' => 'required|string|max:40'
         ]);
 
+        $image_path = $request->file('image')->store('image', 'public');
+
         $data = Singer::query()->create([
-            'image' => $request->image,
+            'image' => $image_path,
             'name' => $request->name,
         ]);
 
@@ -83,6 +85,6 @@ class SingerController extends Controller
     public function destroy(string $id)
     {
         $singer = Singer::findOrFail($id);
-        return response()->json($singer, 200);
+        return response()->json($singer->delete(), 200);
     }
 }

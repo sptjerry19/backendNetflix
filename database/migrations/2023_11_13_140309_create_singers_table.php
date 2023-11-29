@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name')->require;
             $table->string('image');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

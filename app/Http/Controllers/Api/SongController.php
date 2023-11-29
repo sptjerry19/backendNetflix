@@ -136,13 +136,12 @@ class SongController extends Controller
      */
     public function top10(Request $request)
     {
-        $limit = ($request->limit) ? $request->limit : null;
         $data = Song::query()
             ->join('genre_song', 'genre_song.song_id', '=', 'songs.id')
             ->join('genres', 'genre_song.genre_id', '=', 'genres.id')
             ->join('singers', 'songs.singer_id', '=', 'singers.id')
             ->select('songs.*', 'singers.name as singer_name', DB::raw('GROUP_CONCAT(genres.name) AS genre_name'))
-            ->groupBy('songs.id')->limit($limit)->get();
+            ->groupBy('songs.id')->limit(10)->get();
 
         return response()->json($data);
     }
