@@ -19,7 +19,7 @@ class FilmController extends Controller
             $data = Film::where('title', 'LIKE', '%' . $value . '%')->paginate(15);
         } else if (request()->category) {
             $id = request()->category;
-            $data = Film::query()->where('category_id', '=', $id)->paginate(15);
+            $data = Film::query()->where('category_id', '=', $id)->orderByDesc('views')->paginate(15);
         } else {
             $data = Film::query()->join('categories', 'films.category_id', '=', 'categories.id')
                 ->select('films.*', 'categories.name')->paginate(15);

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\FilmController;
+use App\Http\Controllers\Api\FilmFavoriteController;
 use App\Http\Controllers\Api\GenreController;
 use App\Http\Controllers\api\ImdbController;
 use App\Http\Controllers\Api\SingerController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\Api\SongController;
 use App\Http\Controllers\AuthController;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Routing\RouteGroup;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -95,3 +97,11 @@ Route::get('/songs/{id}', [SongController::class, 'show']);
 Route::get('/singers', [SingerController::class, 'index']);
 Route::get('/singers/{id}', [SingerController::class, 'show']);
 Route::get('/singers', [SingerController::class, 'index']);
+
+
+// favorite
+//films
+// Route::controller(FilmFavoriteController::class)->group(function () {
+//     Route::get('/favorites/films', 'index');
+// });
+Route::get('/favorites/films', [FilmFavoriteController::class, 'index']);
