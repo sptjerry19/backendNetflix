@@ -185,4 +185,5 @@ return [
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
+    'frontend_url' => env('FRONTEND_URL', '127.0.0.1')
 ];
