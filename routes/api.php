@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\GenreController;
 use App\Http\Controllers\api\ImdbController;
 use App\Http\Controllers\Api\SingerController;
 use App\Http\Controllers\Api\SongController;
+use App\Http\Controllers\Api\SongFavoriteController;
 use App\Http\Controllers\AuthController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -75,6 +76,14 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/songs', [SongController::class, 'store']);
     Route::put('/songs/{id}', [SongController::class, 'update']);
     Route::delete('/songs/{id}', [SongController::class, 'destroy']);
+
+    //favorites
+    Route::get('/favorites/films', [FilmFavoriteController::class, 'index']);
+    Route::put('/favorites/films/{id}', [FilmFavoriteController::class, 'update']);
+    Route::delete('/favorites/films/{id}', [FilmFavoriteController::class, 'destroy']);
+    Route::get('/favorites/songs', [SongFavoriteController::class, 'index']);
+    Route::put('/favorites/songs/{id}', [SongFavoriteController::class, 'update']);
+    Route::delete('/favorites/songs/{id}', [SongFavoriteController::class, 'destroy']);
 });
 // Route::middleware('auth:sanctum')->get('/users', [AuthController::class, 'index']);
 
@@ -104,4 +113,3 @@ Route::get('/singers', [SingerController::class, 'index']);
 // Route::controller(FilmFavoriteController::class)->group(function () {
 //     Route::get('/favorites/films', 'index');
 // });
-Route::get('/favorites/films', [FilmFavoriteController::class, 'index']);

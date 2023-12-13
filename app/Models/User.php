@@ -45,11 +45,11 @@ class User extends Authenticatable
 
     public function film()
     {
-        return $this->belongsToMany(Film::class);
+        return $this->belongsToMany(Film::class, 'favorite_films', 'user_id', 'film_id');
     }
 
     public function song()
     {
-        return $this->belongsToMany(Song::class);
+        return $this->belongsToMany(Song::class, 'favorite_songs', 'user_id', 'song_id');
     }
 }

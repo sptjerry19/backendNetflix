@@ -27,7 +27,7 @@ class SongController extends Controller
                 ->join('songs', 'genre_song.song_id', '=', 'songs.id')
                 ->where('genres.id', '=', $id)
                 ->join('singers', 'songs.singer_id', '=', 'singers.id')
-                ->select('genres.name as genre_name', 'songs.*', 'singers.name as singer_name')->paginate(15);
+                ->select('genres.name as genre_name', 'songs.*', 'singers.name as singer_name')->get();
         } else if ($search) {
             $data = Genre::query()
                 ->join('genre_song', 'genre_song.genre_id', '=', 'genres.id')
@@ -35,14 +35,14 @@ class SongController extends Controller
                 ->where('songs.name', 'LIKE', '%' . $search . '%')
                 ->join('singers', 'songs.singer_id', '=', 'singers.id')
                 ->select('songs.*', 'singers.name as singer_name', DB::raw('GROUP_CONCAT(genres.name) AS genre_name'))
-                ->groupBy('songs.id')->paginate(15);
+                ->groupBy('songs.id')->get();
         } else {
             $data = Song::query()
                 ->join('genre_song', 'genre_song.song_id', '=', 'songs.id')
                 ->join('genres', 'genre_song.genre_id', '=', 'genres.id')
                 ->join('singers', 'songs.singer_id', '=', 'singers.id')
                 ->select('songs.*', 'singers.name as singer_name', DB::raw('GROUP_CONCAT(genres.name) AS genre_name'))
-                ->groupBy('songs.id')->paginate(15);
+                ->groupBy('songs.id')->get();
         }
         return response()->json($data, 200);
     }
